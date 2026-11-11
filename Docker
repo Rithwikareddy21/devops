@@ -1,0 +1,15 @@
+docker --version
+mkdir docker-demo
+cd docker-demo
+nano Dockerfile
+
+dockerfile:
+FROM python:3.10
+WORKDIR /app
+COPY . .
+CMD ["python", "-c", "print('Hello from Docker!')"]
+
+docker build -t myapp .
+docker images
+docker run --name mycontainer myapp
+docker ps -a
