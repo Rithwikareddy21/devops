@@ -1,0 +1,19 @@
+Python Automated Testing
+mkdir testing
+cd testing
+def add(a, b):
+    return a + b
+def subtract(a, b):
+    return a - b
+
+pip install pytest
+from calculator import add, subtract
+def test_add():
+    assert add(2, 3) == 5
+def test_subtract():
+    assert subtract(5, 3) == 2
+
+pytest -v
+test_calculator.py::test_add PASSED
+test_calculator.py::test_subtract PASSED
+2 passed
