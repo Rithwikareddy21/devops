@@ -1,0 +1,39 @@
+Step 1: Create a GitHub repository.
+
+Step 2: Create a folder:
+.github/workflows/
+
+
+Step 3: Create a file named main.yml.
+
+Step 4: Write the following code:
+name: My First Workflow
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Display message
+        run: echo "Hello DevOps"
+
+      - name: Check Python version
+        run: python --version
+
+
+Step 5: Push the code to GitHub.
+git add .
+git commit -m "Added workflow"
+git push origin main
+
+
+Step 6: Check execution.
+1. Open your GitHub repository.
+2. Click the Actions tab.
+3. Select My First Workflow.
+4. Check the execution status.
