@@ -1,0 +1,22 @@
+Jenkins Freestyle Job
+http://localhost:8080
+Step 2: Create a new job
+1. Click New Item.
+2. Enter the name GitHub-Job.
+3. Select Freestyle project.
+4. Click OK.
+Step 3: Configure GitHub repository
+- Go to Source Code Management.
+- Select Git.
+- Enter the GitHub repository URL.
+Configure build
+
+Under Build Steps:
+1. Click Add build step.
+2. Select Execute shell.
+3. Enter:
+echo "Jenkins Job Started"
+echo "Source code fetched from GitHub"
+ls
+Click Save.
+Click Build Now.
