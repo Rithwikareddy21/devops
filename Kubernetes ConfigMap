@@ -1,0 +1,34 @@
+Kubernetes ConfigMap
+kubectl create configmap my-config --from-literal=APP_COLOR=blue
+kubectl get configmaps
+kubectl describe configmap my-config
+deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-app
+  template:
+    metadata:
+      labels:
+        app: config-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        env:
+        - name: APP_COLOR
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: APP_COLOR
+
+kubectl apply -f deployment.yaml
+kubectl get pods
+kubectl exec -it POD_NAME -- printenv APP_COLOR
+kubectl delete deployment config-deployment
+kubectl delete configmap my-config
