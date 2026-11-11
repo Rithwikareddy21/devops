@@ -1,4 +1,6 @@
-Teraform
+winget install Hashicorp.Terraform
+terraform --version
+
 mkdir terraform-demo
 cd terraform-demo
 nano main.tf
@@ -19,5 +21,5 @@ terraform init
 terraform validate
 terraform plan
 terraform apply
-cat hello.txt
+Get-Content hello.txt or cat hello.txt
 terraform destroy
