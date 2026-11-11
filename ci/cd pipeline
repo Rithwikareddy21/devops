@@ -1,0 +1,249 @@
+
+# END-TO-END CI/CD PIPELINE USING PYTHON FLASK, GITHUB, JENKINS AND DOCKER
+
+AIM:
+To create a Python Flask application and configure an end-to-end CI/CD pipeline using GitHub and Jenkins to install dependencies, run automated tests and build a Docker image.
+
+--------------------------------------------------
+STEP 1: CREATE PROJECT FOLDER
+--------------------------------------------------
+
+Open VS Code Terminal (PowerShell).
+
+mkdir flask-cicd
+cd flask-cicd
+
+Project Structure:
+
+flask-cicd/
+    app.py
+    test_app.py
+    requirements.txt
+    Dockerfile
+    Jenkinsfile
+
+--------------------------------------------------
+STEP 2: CREATE app.py
+--------------------------------------------------
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Welcome to DevOps CI/CD Pipeline!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+--------------------------------------------------
+STEP 3: CREATE test_app.py
+--------------------------------------------------
+
+from app import app
+
+def test_home():
+    client = app.test_client()
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.data == b"Welcome to DevOps CI/CD Pipeline!"
+
+--------------------------------------------------
+STEP 4: CREATE requirements.txt
+--------------------------------------------------
+
+flask
+pytest
+
+--------------------------------------------------
+STEP 5: CREATE Dockerfile
+--------------------------------------------------
+
+FROM python:3.10
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+
+--------------------------------------------------
+STEP 6: CREATE Jenkinsfile
+--------------------------------------------------
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                bat 'py -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                bat 'py -m pytest -v'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t flask-cicd-app .'
+            }
+        }
+    }
+}
+
+--------------------------------------------------
+STEP 7: INSTALL PYTHON DEPENDENCIES
+--------------------------------------------------
+
+py -m pip install -r requirements.txt
+
+--------------------------------------------------
+STEP 8: RUN AUTOMATED TESTING
+--------------------------------------------------
+
+py -m pytest -v
+
+EXPECTED OUTPUT:
+
+test_app.py::test_home PASSED
+
+1 passed
+
+--------------------------------------------------
+STEP 9: RUN FLASK APPLICATION
+--------------------------------------------------
+
+py app.py
+
+Open browser:
+
+http://localhost:5000
+
+EXPECTED OUTPUT:
+
+Welcome to DevOps CI/CD Pipeline!
+
+--------------------------------------------------
+STEP 10: INITIALIZE GIT AND PUSH TO GITHUB
+--------------------------------------------------
+
+git init
+git add .
+git commit -m "Initial Flask CI CD project"
+git branch -M main
+git remote add origin https://github.com/USERNAME/flask-cicd.git
+git push -u origin main
+
+NOTE:
+Replace USERNAME with your GitHub username.
+Create an empty GitHub repository named flask-cicd before pushing.
+
+--------------------------------------------------
+STEP 11: CONFIGURE JENKINS
+--------------------------------------------------
+
+1. Open Jenkins:
+
+http://localhost:8080
+
+2. Click New Item.
+
+3. Enter job name: Flask-CI-CD
+
+4. Select Pipeline.
+
+5. Click OK.
+
+6. Scroll to Pipeline section.
+
+7. Select Pipeline script from SCM.
+
+8. SCM: Git.
+
+9. Repository URL:
+   https://github.com/USERNAME/flask-cicd.git
+
+10. Branch:
+    */main
+
+11. Script Path:
+    Jenkinsfile
+
+12. Click Save.
+
+NOTE:
+Jenkins must be installed and running.
+Git, Python and Docker must be installed on the Jenkins machine and available to the Jenkins service account.
+The Jenkins service account must have permission to execute Docker commands.
+For a private GitHub repository, configure Git credentials in Jenkins.
+
+--------------------------------------------------
+STEP 12: EXECUTE CI/CD PIPELINE
+--------------------------------------------------
+
+1. Open the Flask-CI-CD job.
+2. Click Build Now.
+3. Click the running build number.
+4. Open Console Output.
+
+EXPECTED PIPELINE STAGES:
+
+Checkout                  SUCCESS
+Install Dependencies      SUCCESS
+Run Tests                 SUCCESS
+Build Docker Image        SUCCESS
+
+--------------------------------------------------
+STEP 13: VERIFY DOCKER IMAGE
+--------------------------------------------------
+
+Open PowerShell:
+
+docker images
+
+Expected image name:
+
+flask-cicd-app
+
+Run the container:
+
+docker run -d -p 5000:5000 --name flask-container flask-cicd-app
+
+Open browser:
+
+http://localhost:5000
+
+EXPECTED OUTPUT:
+
+Welcome to DevOps CI/CD Pipeline!
+
+--------------------------------------------------
+STEP 14: CLEANUP
+--------------------------------------------------
+
+docker stop flask-container
+docker rm flask-container
+
+--------------------------------------------------
+RESULT:
+--------------------------------------------------
+
+Successfully created a Python Flask application, pushed the source code to GitHub, configured a Jenkins CI/CD pipeline, installed dependencies, executed automated tests and built a Docker image.
+
