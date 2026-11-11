@@ -1,0 +1,31 @@
+Docker with Python Flask
+mkdir flask-docker
+cd flask-docker
+  create app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello from Flask Docker!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+Create requirements.txt
+flask
+
+dockerfile:
+FROM python:3.10
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+docker build -t flask-app .
+docker run -d -p 5000:5000 --name flask-container flask-app
+
+http://localhost:5000
