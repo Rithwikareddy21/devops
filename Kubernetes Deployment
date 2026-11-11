@@ -1,0 +1,31 @@
+Kubernetes deployment
+kubectl version --client
+nano deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx-deployment
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+kubectl apply -f deployment.yaml
+kubectl get deployments
+kubectl get pods
+kubectl delete -f deployment.yaml
